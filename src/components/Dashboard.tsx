@@ -1,11 +1,28 @@
-'use client';
+"use client";
 
-import { Expense } from '@/src/types/Expense';
-import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
-import { Line } from 'react-chartjs-2';
-import { useMemo } from 'react';
+import { Expense } from "@/src/types/Expense";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
+import { Line } from "react-chartjs-2";
+import { useMemo } from "react";
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 interface DashboardProps {
   expenses: Expense[];
@@ -19,7 +36,7 @@ const Dashboard: React.FC<DashboardProps> = ({ expenses }) => {
       if (!result[expense.category]) {
         result[expense.category] = {};
       }
-      result[expense.category][expense.date] = 
+      result[expense.category][expense.date] =
         (result[expense.category][expense.date] || 0) + expense.amount;
     });
 
@@ -31,12 +48,14 @@ const Dashboard: React.FC<DashboardProps> = ({ expenses }) => {
       new Set(expenses.map((expense) => expense.date))
     ).sort();
 
-    const datasets = Object.entries(categorizedExpenses).map(([category, dateData]) => ({
-      label: category,
-      data: allDates.map((date) => dateData[date] || 0), // Fill in 0 if no data for a date
-      borderColor: `#${Math.floor(Math.random() * 16777215).toString(16)}`, // Generate random colors
-      backgroundColor: 'rgba(0, 0, 0, 0)',
-    }));
+    const datasets = Object.entries(categorizedExpenses).map(
+      ([category, dateData]) => ({
+        label: category,
+        data: allDates.map((date) => dateData[date] || 0), // Fill in 0 if no data for a date
+        borderColor: `#${Math.floor(Math.random() * 16777215).toString(16)}`, // Generate random colors
+        backgroundColor: "rgba(0, 0, 0, 0)",
+      })
+    );
 
     return {
       labels: allDates,
@@ -57,14 +76,18 @@ const Dashboard: React.FC<DashboardProps> = ({ expenses }) => {
         </header>
         <main className="p-6">
           <section className="mb-6">
-            <p className="text-2xl font-semibold text-gray-800">Spending by Category (Multi-Line Chart)</p>
+            <p className="text-2xl font-semibold text-gray-800">
+              Spending by Category (Multi-Line Chart)
+            </p>
             <div className="mt-4">
               <Line data={chartData} />
             </div>
           </section>
           <section className="mt-6">
-            <h3 className="text-xl font-semibold text-gray-700">Expenses Sorted by Category</h3>
-            <ul className="space-y-4 mt-4">
+            <h3 className="text-xl font-semibold text-gray-700">
+              Expenses Sorted by Category
+            </h3>
+            <ul className="space-y-4 mt-4 mr-2">
               {sortedExpenses.map((expense) => (
                 <li
                   key={expense.id}
@@ -73,7 +96,9 @@ const Dashboard: React.FC<DashboardProps> = ({ expenses }) => {
                   <span className="text-gray-700 font-medium">
                     {expense.date} - {expense.category}: {expense.description}
                   </span>
-                  <span className="text-blue-500 font-semibold">${expense.amount?.toFixed(2)}</span>
+                  <span className="text-blue-500 font-semibold">
+                    ${expense.amount?.toFixed(2)}
+                  </span>
                 </li>
               ))}
             </ul>
